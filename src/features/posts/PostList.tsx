@@ -1,12 +1,7 @@
-import { useEffect } from "react";
 import { useAppSelector } from "../../app/hooks";
 
 const PostList = () => {
   const posts = useAppSelector(state => state.posts);
-
-  useEffect(() => {
-    console.log(posts);
-  }, [posts]);
 
   return (
     <section>

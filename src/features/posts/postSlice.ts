@@ -1,3 +1,4 @@
+import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
 
 type Post = {
@@ -24,7 +25,16 @@ const initialState: PostsState = [
 const postsSlice = createSlice({
   name: "posts",
   initialState,
-  reducers: {},
+  reducers: {
+    postAdded(state, action: PayloadAction<Post>) {
+      return {
+        ...state,
+        posts: [...state, action.payload],
+      };
+    },
+  },
 });
+
+export const { postAdded } = postsSlice.actions;
 
 export default postsSlice.reducer;
