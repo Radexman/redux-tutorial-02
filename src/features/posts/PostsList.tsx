@@ -1,4 +1,5 @@
 import { useAppSelector } from "../../app/hooks";
+import PostAuthor from "./PostAuthor";
 
 const PostList = () => {
   const posts = useAppSelector(state => state.posts);
@@ -17,6 +18,9 @@ const PostList = () => {
             <article key={id}>
               <h2>{title}</h2>
               <p>{content.substring(0, 100)}</p>
+              <p className="postCredit">
+                <PostAuthor userId={id} />
+              </p>
             </article>
           );
         })

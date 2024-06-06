@@ -1,13 +1,15 @@
 import type { ChangeEvent, FormEvent } from "react";
 import { useState } from "react";
-import { useAppDispatch } from "../../app/hooks";
-import { nanoid } from "@reduxjs/toolkit";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { postAdded } from "./postSlice";
 import { toast } from "react-toastify";
 
 const AddPostForm = () => {
+  const users = useAppSelector(state => state.users);
+
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [userId, setUserId] = useState("");
 
   const dispatch = useAppDispatch();
 
@@ -16,6 +18,9 @@ const AddPostForm = () => {
 
   const handleContentChange = (e: ChangeEvent<HTMLTextAreaElement>) =>
     setContent(e.target.value);
+
+  const handleAuthorChange = (e: ChangeEvent<HTMLSelectElement>) =>
+    setUserId(e.target.value);
 
   const resetForm = () => {
     setTitle("");
@@ -26,22 +31,16 @@ const AddPostForm = () => {
     e.preventDefault();
 
     if (!title) {
-      toast.error("⚠️ Please add post title");
+      toast.error("Please add post title ⚠️");
       return;
     }
 
     if (!content) {
-      toast.error("⚠️ Please add post content");
+      toast.error("Please add post content ⚠️");
       return;
     }
 
-    dispatch(
-      postAdded({
-        id: nanoid(),
-        title,
-        content,
-      }),
-    );
+    dispatch(postAdded(title, content, userId));
 
     toast.success("🎊 Post created");
     resetForm();
@@ -59,13 +58,23 @@ const AddPostForm = () => {
           value={title}
           onChange={handleTitleChange}
         />
+        <select name="userId" id="userId" onChange={handleAuthorChange}>
+          {users.map(user => {
+            const { id, name } = user;
+            return (
+              <option key={id} value={id}>
+                {name}
+              </option>
+            );
+          })}
+        </select>
         <label htmlFor="postContent">Content:</label>
         <textarea
           name="postContent"
           id="postContent"
           value={content}
           onChange={handleContentChange}
-          placeholder="Share your thaughts..."
+          placeholder="Share your thoughts..."
         ></textarea>
         <button type="submit">Submit</button>
       </form>
