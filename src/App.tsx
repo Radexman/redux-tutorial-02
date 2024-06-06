@@ -8,8 +8,8 @@ const App = () => {
     <div className="App">
       <h1>Redux Chapter 2</h1>
       <PostList />
-      <ToastContainer />
       <AddPostForm />
+      <ToastContainer />
     </div>
   );
 };

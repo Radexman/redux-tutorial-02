@@ -1,10 +1,15 @@
 import type { ChangeEvent, FormEvent } from "react";
 import { useState } from "react";
+import { useAppDispatch } from "../../app/hooks";
+import { nanoid } from "@reduxjs/toolkit";
+import { postAdded } from "./postSlice";
 import { toast } from "react-toastify";
 
 const AddPostForm = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+
+  const dispatch = useAppDispatch();
 
   const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) =>
     setTitle(e.target.value);
@@ -21,16 +26,24 @@ const AddPostForm = () => {
     e.preventDefault();
 
     if (!title) {
-      toast.error("Please add post title");
+      toast.error("⚠️ Please add post title");
       return;
     }
 
     if (!content) {
-      toast.error("Please add post content");
+      toast.error("⚠️ Please add post content");
       return;
     }
 
-    toast.success("Post created");
+    dispatch(
+      postAdded({
+        id: nanoid(),
+        title,
+        content,
+      }),
+    );
+
+    toast.success("🎊 Post created");
     resetForm();
   };
 
