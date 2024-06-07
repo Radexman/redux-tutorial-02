@@ -25,6 +25,7 @@ const AddPostForm = () => {
   const resetForm = () => {
     setTitle("");
     setContent("");
+    setUserId(""); // Reset userId
   };
 
   const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -37,6 +38,11 @@ const AddPostForm = () => {
 
     if (!content) {
       toast.error("Please add post content ⚠️");
+      return;
+    }
+
+    if (!userId) {
+      toast.error("Please select an author ⚠️");
       return;
     }
 
@@ -58,7 +64,13 @@ const AddPostForm = () => {
           value={title}
           onChange={handleTitleChange}
         />
-        <select name="userId" id="userId" onChange={handleAuthorChange}>
+        <select
+          name="userId"
+          id="userId"
+          onChange={handleAuthorChange}
+          value={userId}
+        >
+          <option value=""></option>
           {users.map(user => {
             const { id, name } = user;
             return (

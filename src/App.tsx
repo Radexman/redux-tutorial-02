@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 const App = () => {
   return (
     <div className="App">
-      <h1>Redux Chapter 2</h1>
+      <h1>Redux Chapter 3 - Async Logic & Thunks</h1>
       <AddPostForm />
       <PostList />
       <ToastContainer />
