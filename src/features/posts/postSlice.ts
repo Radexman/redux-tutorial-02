@@ -27,7 +27,9 @@ const initialState: PostsState = {
 
 export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
   const response = await axios.get(POSTS_URL);
-  return response.data;
+  console.log(response.data);
+
+  return response.data.slice(0, 10);
 });
 
 const postsSlice = createSlice({
@@ -38,12 +40,12 @@ const postsSlice = createSlice({
       reducer(state, action: PayloadAction<Post>) {
         state.posts.push(action.payload);
       },
-      prepare(title, content, userId) {
+      prepare(title, body, userId) {
         return {
           payload: {
             id: nanoid(),
             title,
-            content,
+            body,
             date: new Date().toISOString(),
             userId,
             reactions: {

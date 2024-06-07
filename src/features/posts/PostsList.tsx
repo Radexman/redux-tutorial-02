@@ -1,38 +1,37 @@
-import { useAppSelector } from "../../app/hooks";
-import PostAuthor from "./PostAuthor";
-import ReactionButtons from "./ReactionButtons";
-import TimeAgo from "./TimeAgo";
+import { useEffect } from "react";
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import { fetchPosts } from "./postSlice";
+import PostExcerpt from "./PostExcerpt";
 
 const PostList = () => {
-  const { posts } = useAppSelector(state => state.posts);
+  const { posts, status, error } = useAppSelector(state => state.posts);
 
-  const orderedPosts = posts
-    .slice()
-    .sort((a, b) => b.date.localeCompare(a.date));
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchPosts());
+    }
+  }, [dispatch, status]);
+
+  let content;
+  if (status === "loading") {
+    content = <p>Loading...</p>;
+  } else if (status === "succeeded") {
+    const orderedPosts = posts
+      .slice()
+      .sort((a, b) => b.date.localeCompare(a.date));
+    content = orderedPosts.map(post => (
+      <PostExcerpt key={post.id} post={post} />
+    ));
+  } else if (status === "failed") {
+    content = <p>{error}</p>;
+  }
 
   return (
     <section>
-      {posts.length === 0 ? (
-        <>
-          <h1>No Posts Currently</h1>
-          <p>Create a post to see the content</p>
-        </>
-      ) : (
-        orderedPosts.map(post => {
-          const { id, title, date, content, userId } = post;
-          return (
-            <article key={id}>
-              <h2>{title}</h2>
-              <p>{content.substring(0, 100)}</p>
-              <p className="postCredit">
-                <PostAuthor userId={userId} />
-                <TimeAgo timestamp={date} />
-              </p>
-              <ReactionButtons post={post} />
-            </article>
-          );
-        })
-      )}
+      <h2>Posts</h2>
+      {content}
     </section>
   );
 };
