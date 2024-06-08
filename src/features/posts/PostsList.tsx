@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import { nanoid } from "@reduxjs/toolkit";
 import { fetchPosts } from "./postSlice";
 import PostExcerpt from "./PostExcerpt";
 
@@ -18,11 +19,9 @@ const PostList = () => {
   if (status === "loading") {
     content = <p>Loading...</p>;
   } else if (status === "succeeded") {
-    const orderedPosts = posts
-      .slice()
-      .sort((a, b) => b.date.localeCompare(a.date));
+    const orderedPosts = posts;
     content = orderedPosts.map(post => (
-      <PostExcerpt key={post.id} post={post} />
+      <PostExcerpt key={nanoid()} post={post} />
     ));
   } else if (status === "failed") {
     content = <p>{error}</p>;

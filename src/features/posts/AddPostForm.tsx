@@ -1,7 +1,7 @@
 import type { ChangeEvent, FormEvent } from "react";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { postAdded } from "./postSlice";
+import { addNewPost } from "./postSlice";
 import { toast } from "react-toastify";
 
 const AddPostForm = () => {
@@ -10,6 +10,7 @@ const AddPostForm = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [userId, setUserId] = useState("");
+  const [addRequestStatus, setRequestStatus] = useState("idle");
 
   const dispatch = useAppDispatch();
 
@@ -25,7 +26,7 @@ const AddPostForm = () => {
   const resetForm = () => {
     setTitle("");
     setContent("");
-    setUserId(""); // Reset userId
+    setUserId("");
   };
 
   const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -46,7 +47,9 @@ const AddPostForm = () => {
       return;
     }
 
-    dispatch(postAdded(title, content, userId));
+    setRequestStatus("pending");
+
+    dispatch(addNewPost({ title, body: content, userId })).unwrap();
 
     toast.success("🎊 Post created");
     resetForm();
